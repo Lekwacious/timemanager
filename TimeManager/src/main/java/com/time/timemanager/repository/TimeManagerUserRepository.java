@@ -7,9 +7,12 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface TimeManagerUserRepository extends JpaRepository<TimeManagerUser, Integer> {
+public interface TimeManagerUserRepository extends JpaRepository<TimeManagerUser, Long> {
 
     Optional<TimeManagerUser> findByEmail(String email);
+    Optional<TimeManagerUser> findByUsernameOrEmail(String username, String email);
+    Boolean existsByEmail(String email);
+
 
 
 

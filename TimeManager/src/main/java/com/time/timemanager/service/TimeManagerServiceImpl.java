@@ -2,25 +2,33 @@ package com.time.timemanager.service;
 
 import com.time.timemanager.exception.ResourceAlreadyExist;
 import com.time.timemanager.exception.ResourceNotFoundException;
+import com.time.timemanager.model.RoleName;
+import com.time.timemanager.model.Roles;
 import com.time.timemanager.model.TimeManagerUser;
-import com.time.timemanager.payload.RequestPayLoad;
+import com.time.timemanager.payload.requestPayload.SignupRequest;
+import com.time.timemanager.repository.RoleRepository;
 import com.time.timemanager.repository.TimeManagerUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class TimeManagerServiceImpl implements TimeManagerUserService {
     @Autowired
     private TimeManagerUserRepository timeManagerUserRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
-    public TimeManagerUser createUser(RequestPayLoad requestPayLoad) throws ResourceNotFoundException {
-     TimeManagerUser getUserEmail= findByEmailAddress(requestPayLoad.getEmail());
-        if (Objects.equals(getUserEmail.getEmail(), requestPayLoad.getEmail())) {
+    public TimeManagerUser createUser(SignupRequest requestPayLoad) throws ResourceNotFoundException {
+     Boolean emailExist= timeManagerUserRepository.existsByEmail(requestPayLoad.getEmail());
+        if (emailExist) {
             throw new ResourceAlreadyExist("email already exist");
 
         } else  {
@@ -29,7 +37,23 @@ public class TimeManagerServiceImpl implements TimeManagerUserService {
             user.setFirstName(requestPayLoad.getFirstName());
             user.setPhoneNumber(requestPayLoad.getPassword());
             user.setLastName(requestPayLoad.getLastName());
-            timeManagerUserRepository.save(user);
+            user.setPassword(passwordEncoder.encode(requestPayLoad.getPassword()));
+           Optional<Roles> role= roleRepository.findByName(RoleName.ROLE_USER);
+            Roles userRole = null; 
+           if (role.isEmpty()){
+                 userRole = new  Roles(RoleName.ROLE_USER);
+
+                user.setRoles(Collections.singleton(userRole));
+                roleRepository.save(userRole);
+                timeManagerUserRepository.save(user);
+                
+            }
+            else {
+                user.setRoles(Collections.singleton(role.get()));
+                timeManagerUserRepository.save(user);
+            }
+
+
             return user;
         }
 
@@ -53,7 +77,7 @@ public class TimeManagerServiceImpl implements TimeManagerUserService {
        }
 
     @Override
-    public TimeManagerUser findByID(Integer id) throws ResourceNotFoundException {
+    public TimeManagerUser findByID(Long id) throws ResourceNotFoundException {
         Optional<TimeManagerUser> user = timeManagerUserRepository.findById(id);
         if (user.isEmpty()){
             throw new ResourceNotFoundException("id not found,id does not exist");
