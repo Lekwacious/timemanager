@@ -8,15 +8,18 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="TimeManager" />
+        <module name="timemanager" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="timemanager" target="17" />
       <module name="TimeManager" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="TimeManager" options="-parameters" />
+      <module name="timemanager" options="-parameters" />
     </option>
   </component>
 </project>

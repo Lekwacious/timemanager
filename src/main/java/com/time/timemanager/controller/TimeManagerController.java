@@ -52,6 +52,19 @@ public class TimeManagerController {
         }
 
     }
+    @PostMapping("/create/{email}")
+    public ResponseEntity<?> findUserByEmail(@RequestBody String email){
+        try{
+            TimeManagerUser user = timeManagerUserService.findByEmailAddress(email);
+            return new ResponseEntity<>(new TimeManagerBaseResponse(true,"successful",
+                    HttpStatus.OK.value(),LocalDate.now(),user),HttpStatus.OK);
+        } catch (ResourceNotFoundException e) {
+            return new ResponseEntity<>(new BaseResponsePayload
+                    (false, e.getMessage(), HttpStatus.BAD_REQUEST.value(),
+                            LocalDate.now()),HttpStatus.BAD_REQUEST);
+        }
+
+    }
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest){
 
