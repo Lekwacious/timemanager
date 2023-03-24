@@ -16,10 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
@@ -53,7 +50,7 @@ public class TimeManagerController {
 
     }
     @PostMapping("/create/{email}")
-    public ResponseEntity<?> findUserByEmail(@RequestBody String email){
+    public ResponseEntity<?> findUserByEmail(@PathVariable String email){
         try{
             TimeManagerUser user = timeManagerUserService.findByEmailAddress(email);
             return new ResponseEntity<>(new TimeManagerBaseResponse(true,"successful",
