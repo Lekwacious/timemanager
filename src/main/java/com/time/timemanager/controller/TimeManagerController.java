@@ -49,7 +49,7 @@ public class TimeManagerController {
         }
 
     }
-    @PostMapping("/create/{email}")
+    @PostMapping("/user/{email}")
     public ResponseEntity<?> findUserByEmail(@PathVariable String email){
         try{
             TimeManagerUser user = timeManagerUserService.findByEmailAddress(email);
