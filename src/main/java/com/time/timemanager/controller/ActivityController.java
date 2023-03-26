@@ -24,7 +24,7 @@ public class ActivityController {
     private ActivityService activityService;
 
     @PostMapping("/log")
-    public ResponseEntity<?> createUser(@RequestBody ActivityRequest requestPayLoad){
+    public ResponseEntity<?> addLog(@RequestBody ActivityRequest requestPayLoad){
         Activity user = activityService.logActivity(requestPayLoad);
         return new ResponseEntity<>(new ActivityBaseResponse(true,"successful",
                 HttpStatus.CREATED.value(), LocalDate.now(),user),HttpStatus.CREATED);

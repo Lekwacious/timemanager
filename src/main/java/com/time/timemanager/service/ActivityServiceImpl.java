@@ -24,6 +24,8 @@ public class ActivityServiceImpl implements ActivityService{
         activity.setDate(LocalDate.now());
         activity.setIdNumber(activityRequest.getIdNumber());
         activity.setTimeStarted(LocalTime.now());
+        activity.setTitle(activityRequest.getTitle());
+        activity.setDescription(activityRequest.getDescription());
         //activity.setTimeEnded(activityRequest.getTimeEnded());
         return activityRepository.save(activity);
     }
